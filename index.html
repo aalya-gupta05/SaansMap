@@ -220,7 +220,8 @@ function render(stations, greenPolys) {
     const stationList = await fetchStations();
     const details = [];
     for (const s of stationList) {
-     details.push(await fetchStationDetail(s[3]));
+     const uid = Array.isArray(s) ? s[3] : s.uid;
+     details.push(await fetchStationDetail(uid));
     }
     const stations = details.filter(Boolean);
     if (!stations.length) throw new Error("No PM2.5 stations found");
