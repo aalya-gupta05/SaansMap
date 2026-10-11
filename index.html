@@ -110,7 +110,7 @@ async function fetchStations() {
   const r = await fetch(url);
   const j = await r.json();
   if (j.status !== "ok") throw new Error("WAQI station list failed");
-  return j.data.slice(0, 60);
+  return j.data.slice(0, 20);
 }
 
 async function fetchStationDetail(uid) {
@@ -218,7 +218,10 @@ function render(stations, greenPolys) {
   }
   try {
     const stationList = await fetchStations();
-    const details = await Promise.all(stationList.map(s => fetchStationDetail(s[3])));
+    const details = [];
+    for (const s of stationList) {
+     details.push(await fetchStationDetail(s[3]));
+    }
     const stations = details.filter(Boolean);
     if (!stations.length) throw new Error("No PM2.5 stations found");
 
